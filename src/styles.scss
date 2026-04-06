@@ -1,0 +1,55 @@
+/* استيراد Tailwind (للاحتياط) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* إعدادات المتصفح الأساسية */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* الخلفية السوداء العميقة للنظام بالكامل */
+body {
+  background-color: #02040a !important;
+  color: #e6edf3;
+  min-height: 100vh;
+  direction: rtl; /* ليدعم اللغة العربية بشكل صحيح */
+}
+
+/* تأثيرات الزجاج (Glassmorphism) التي سنستخدمها في كل مكان */
+.glass-panel {
+  background: rgba(13, 17, 23, 0.8);
+  backdrop-filter: blur(120px);
+  -webkit-backdrop-filter: blur(120px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* ألوان النيون الخاصة ببراند "المجد" */
+:root {
+  --neon-blue: #2563eb;
+  --neon-purple: #9333ea;
+  --dark-card: #0d1117;
+}
+/* أضف هذه السطور في أسفل ملف styles.scss لتعزيز كود الـ HTML الخاص بك */
+
+input::placeholder {
+  color: #4b5563 !important; /* لضمان ظهور الـ placeholder بشكل واضح */
+}
+
+/* تحسين حركة النيون في الخلفية */
+.blur-circle {
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* إذا لم يعمل Tailwind، هذا الكلاس سيضمن ظهور البطاقة بشكل زجاجي */
+.bg-glass-backup {
+  background: rgba(13, 17, 23, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}

@@ -1,0 +1,172 @@
+<div class="admin-container">
+  <div class="header">
+    <div class="header-top">
+      <h1>نظام المجد لإدارة الطلاب</h1>
+      <button *ngIf="viewMode !== 'gender'" class="btn-back" (click)="viewMode = 'gender'">الرئيسية</button>
+    </div>
+  </div>
+
+  <div class="selection-grid" *ngIf="viewMode === 'gender'">
+    <div class="card boys" (click)="selectGender('بنين')"><h3>قسم البنين 👦</h3></div>
+    <div class="card girls" (click)="selectGender('بنات')"><h3>قسم البنات 👧</h3></div>
+  </div>
+
+  <div class="items-grid" *ngIf="viewMode === 'levels'">
+    <div class="item-card" *ngFor="let l of ['اول', 'ثاني', 'ثالث', 'رابع', 'خامس', 'سادس', 'اول ثانوي']" (click)="selectLevel(l)">
+      <span>{{ l }}</span>
+    </div>
+  </div>
+
+  <div class="items-grid" *ngIf="viewMode === 'sections'">
+    <div class="item-card" *ngFor="let s of ['أ', 'ب', 'ج']" (click)="selectSection(s)">
+      <span>شعبة ({{ s }})</span>
+    </div>
+  </div>
+
+  <div class="students-grid" *ngIf="viewMode === 'students'">
+    <div class="student-card" *ngFor="let s of filteredStudents" (click)="openDetails(s)">
+      <img [src]="s.imageUrl || 'assets/user.png'">
+      <h3>{{ s.name }}</h3>
+      <span class="status-pill" [class.is-debt]="s.remainingAmount > 0">
+        {{ s.remainingAmount > 0 ? 'متبقي: ' + s.remainingAmount : 'خالص' }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal && currentStudent">
+  <div class="modal-content premium-modal academic-scroll">
+    <div class="modal-header-fancy">
+      <div class="student-profile-header">
+        <img [src]="currentStudent.imageUrl || 'assets/user.png'">
+        <div class="title-meta">
+          <h2>{{ currentStudent.name }}</h2>
+          <span class="tag">{{ currentStudent.level }} - شعبة {{ currentStudent.section }}</span>
+        </div>
+      </div>
+      <button class="close-glass" (click)="showModal = false">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="finance-dashboard">
+        <div class="dash-header">
+          <h3>📊 السجل المالي التفصيلي</h3>
+          <button class="btn-toggle-edit" [class.editing]="isFinanceEditing" (click)="toggleFinanceEdit()">
+            {{ isFinanceEditing ? '✅ إنهاء التعديل' : '✏️ تعديل المبالغ' }}
+          </button>
+        </div>
+
+        <div class="finance-grid">
+          <div class="f-item study">
+            <div class="f-head">📚 الرسوم الدراسية</div>
+            <div class="f-body">
+              <div class="val">الكل: <input type="number" [(ngModel)]="currentStudent.baseFees" [disabled]="!isFinanceEditing"></div>
+              <div class="val">المدفوع: <input type="number" [(ngModel)]="currentStudent.paidAmount" [disabled]="!isFinanceEditing"></div>
+              <div class="remain">المتبقي: {{ currentStudent.baseFees - currentStudent.paidAmount }}</div>
+            </div>
+          </div>
+
+          <div class="f-item bus">
+            <div class="f-head">🚌 رسوم الباص</div>
+            <div class="f-body">
+              <div class="val">الكل: <input type="number" [(ngModel)]="currentStudent.busFees" [disabled]="!isFinanceEditing"></div>
+              <div class="val">المدفوع: <input type="number" [(ngModel)]="currentStudent.busPaid" [disabled]="!isFinanceEditing"></div>
+              <div class="remain">المتبقي: {{ currentStudent.busFees - currentStudent.busPaid }}</div>
+            </div>
+          </div>
+
+          <div class="f-item uniform">
+            <div class="f-head">👕 الزي المدرسي</div>
+            <div class="f-body">
+              <div class="val">الكل: <input type="number" [(ngModel)]="currentStudent.uniformFees" [disabled]="!isFinanceEditing"></div>
+              <div class="val">المدفوع: <input type="number" [(ngModel)]="currentStudent.uniformPaid" [disabled]="!isFinanceEditing"></div>
+              <div class="remain">المتبقي: {{ currentStudent.uniformFees - currentStudent.uniformPaid }}</div>
+            </div>
+          </div>
+            <h1>خصم%</h1>
+          <div class="f-item compact-discount" [class.active-discount]="currentStudent.discount > 0">
+            <div class="f-body-row">
+              <div class="mini-input-group">
+                <div class="field-pair">
+                  <label>المبلغ:</label>
+                  <input type="number" [(ngModel)]="currentStudent.discount" [disabled]="!isFinanceEditing" class="mini-input">
+                </div>
+
+                <div class="field-pair">
+                  <label>السبب:</label>
+                  <select [(ngModel)]="currentStudent.discountReason" [disabled]="!isFinanceEditing" class="mini-select">
+                    <option value="">-- اختر --</option>
+                    <option *ngFor="let r of discountReasons" [value]="r">{{ r }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="custom-input-box" *ngIf="currentStudent.discountReason === 'أخرى (كتابة يدوية)'">
+                <input type="text" [(ngModel)]="currentStudent.customReason" placeholder="اكتب السبب هنا..." class="mini-custom-input">
+              </div>
+
+              <div class="discount-status" *ngIf="currentStudent.discount > 0">
+                ✅ خصم: {{ currentStudent.discountReason === 'أخرى (كتابة يدوية)' ? currentStudent.customReason : currentStudent.discountReason }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="academic-section">
+        <div class="month-switcher">
+          <button (click)="selectedMonthIndex = (selectedMonthIndex-1+12)%12">◀</button>
+          <h4>سجل شهر: {{ months[selectedMonthIndex] }}</h4>
+          <button (click)="selectedMonthIndex = (selectedMonthIndex+1)%12">▶</button>
+        </div>
+
+        <div class="attendance-box">
+          <div class="box-header">
+            <h5>🗓️ سجل التحضير (اضغط للتبديل)</h5>
+            <div class="legend">
+              <span><b class="success-text">✅</b> حاضر</span>
+              <span><b class="danger-text">❌</b> غائب</span>
+            </div>
+          </div>
+
+          <div class="days-flex">
+            <div *ngFor="let d of daysInMonth" class="day-node"
+                 [class.is-present]="getDayStatus(d) === 'present'"
+                 [class.is-absent]="getDayStatus(d) === 'absent'"
+                 (click)="toggleAttendance(d)">
+              <span class="day-num">{{ d }}</span>
+              <span class="status-icon">
+                <ng-container [ngSwitch]="getDayStatus(d)">
+                  <span *ngSwitchCase="'present'">✅</span>
+                  <span *ngSwitchCase="'absent'">❌</span>
+                  <span *ngSwitchDefault>➖</span>
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grades-box">
+          <h5>📝 درجات المواد</h5>
+          <table class="premium-table">
+            <thead>
+              <tr><th>المادة</th><th>شهري (30)</th><th>اختبار (70)</th><th>المجموع</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sub of subjects">
+                <td>{{ sub }}</td>
+                <td><input type="number" [(ngModel)]="getGrade(sub).monthly"></td>
+                <td><input type="number" [(ngModel)]="getGrade(sub).exam"></td>
+                <td class="total">{{ getGrade(sub).monthly + getGrade(sub).exam }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-save-all" (click)="save()">حفظ كافة التغييرات</button>
+    </div>
+  </div>
+</div>

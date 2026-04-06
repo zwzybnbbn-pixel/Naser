@@ -1,0 +1,30 @@
+<div class="auth-wrapper">
+  <div class="neon-bg blue"></div>
+  <div class="neon-bg purple"></div>
+
+  <div class="auth-card">
+    <div class="logo-box">MQ</div>
+    <h2>نظام المجد الذكي</h2>
+    <p class="subtitle">بوابة الإدارة المركزية - Developed by Majed Qasem</p>
+
+    <form (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <div class="input-wrapper">
+          <input type="email" name="email" [(ngModel)]="loginData.email" placeholder="admin@al-majd.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="input-wrapper">
+          <input type="password" name="password" [(ngModel)]="loginData.password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+  {{ loading ? 'جاري التحقق...' : 'دخول للنظام' }}
+</button>
+    </form>
+  </div>
+</div>
