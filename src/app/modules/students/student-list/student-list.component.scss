@@ -60,7 +60,7 @@ $text-muted: #8b949e;
         border-color: $primary-blue;
         transform: translateY(-8px);
         box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
-        background: lighten($card-bg, 2%);
+        background: color-mix(in srgb, $card-bg, white 2%);
       }
 
       &.boys { border-right: 5px solid #2563eb; }
@@ -265,7 +265,7 @@ $text-muted: #8b949e;
         font-size: 1rem;
         cursor: pointer;
         transition: 0.3s;
-        &:hover { background: darken($primary-blue, 10%); transform: scale(1.01); }
+        &:hover { background: color-mix(in srgb, $primary-blue, black 10%);; transform: scale(1.01); }
       }
     }
   }
