@@ -1,0 +1,95 @@
+<div class="dashboard-layout">
+
+  <aside class="side-menu">
+    <div class="brand">
+      <div class="logo-box">M</div>
+      <span>نظام المدارس</span>
+    </div>
+
+    <nav class="links">
+  <a routerLink="/control-room" routerLinkActive="active" class="nav-link">
+    <span class="icon">📊</span> الرئيسية
+  </a>
+
+  <a routerLink="/students" routerLinkActive="active" class="nav-link">
+    <span class="icon">👥</span> شؤون الطلاب
+  </a>
+
+  <a routerLink="/employees" routerLinkActive="active" class="nav-link">
+    <span class="icon">👨‍🏫</span> الموظفين
+  </a>
+
+<a routerLink="/reports" routerLinkActive="active" class="nav-link">
+  <span class="icon">📄</span> التقارير المالية
+</a>
+</nav>
+
+    <div class="user-profile">
+      <div class="status-dot"></div>
+      <div class="info">
+        <p>المدير</p>
+        <small>متصل الآن</small>
+      </div>
+    </div>
+  </aside>
+
+  <main class="dashboard-container">
+    <header class="stats-header">
+      <div class="glass-card purple" [routerLink]="['/employees']">
+        <div class="icon">👨‍🏫</div>
+        <div class="info">
+          <span class="label">إجمالي الكادر</span>
+          <span class="value">{{ empStats.count }} موظف/ه</span>
+        </div>
+      </div>
+
+      <div class="glass-card students" [routerLink]="['/students']">
+        <div class="icon">👥</div>
+        <div class="info">
+          <span class="label">إجمالي الطلاب</span>
+          <span class="value">{{ totalStudents }}</span>
+        </div>
+      </div>
+
+      <div class="glass-card income">
+        <div class="icon">💰</div>
+        <div class="info">
+          <span class="label">الإيرادات المحصلة</span>
+          <span class="value">{{ totalCollected | number }} <small>RY</small></span>
+        </div>
+      </div>
+
+      <div class="glass-card debt">
+        <div class="icon">📉</div>
+        <div class="info">
+          <span class="label">الديون المتبقية</span>
+          <span class="value">{{ totalDebt | number }} <small>RY</small></span>
+        </div>
+      </div>
+    </header>
+
+    <section class="operations-body">
+      <div class="filter-bar">
+        <h3>💎 سجل العمليات اليومي</h3>
+        <input type="date" #dateInput (change)="onDateChange(dateInput.value)" [value]="selectedDateString">
+      </div>
+
+      <div class="timeline">
+        <div class="transaction-card" *ngFor="let item of dayTransactions" [ngClass]="item.type">
+          <div class="item-main">
+            <span class="item-icon">{{ item.icon }}</span>
+            <div class="text">
+              <h4>{{ item.title }}</h4>
+              <p>{{ item.detail }}</p>
+            </div>
+          </div>
+          <div class="item-finance">
+            <span class="amount">{{ item.amount | number }}</span>
+            <small>RY</small>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</div>

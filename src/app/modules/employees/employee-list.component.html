@@ -1,0 +1,40 @@
+<div class="employee-page">
+  <div class="page-header">
+    <div class="title">
+      <h1>👨‍🏫 إدارة شؤون الكادر</h1>
+      <p>التحكم بالرواتب، المكافآت، والسحبيات المالية</p>
+    </div>
+    <button class="add-btn" (click)="addNewEmployee()">+ إضافة موظف جديد</button>
+  </div>
+
+  <div class="table-container">
+    <table class="majd-table">
+      <thead>
+        <tr>
+          <th>اسم الموظف</th>
+          <th>الوظيفة</th>
+          <th>الراتب الأساسي</th>
+          <th>المكافآت (+)</th>
+          <th>السحبيات (-)</th>
+          <th>الصافي المستحق</th>
+          <th>الإجراءات السريعة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of employees">
+          <td><strong>{{ emp.name }}</strong></td>
+          <td><span class="badge">{{ emp.jobTitle }}</span></td>
+          <td>{{ emp.baseSalary | number }}</td>
+          <td class="text-gold">+{{ emp.totalBonuses | number }}</td>
+          <td class="text-red">-{{ emp.totalWithdrawals | number }}</td>
+          <td class="net-salary">{{ emp.netSalary | number }} RY</td>
+          <td class="actions">
+            <button class="action-btn bonus" (click)="onBonus(emp)" title="إضافة مكافأة">🎁</button>
+            <button class="action-btn withdraw" (click)="onWithdraw(emp)" title="تسجيل سحبية">🏧</button>
+            <button class="action-btn edit">⚙️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

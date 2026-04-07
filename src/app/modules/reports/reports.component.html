@@ -1,0 +1,87 @@
+<div class="reports-wrapper" dir="rtl">
+  <nav class="report-nav no-print">
+    <button [class.active]="activeTab === 'students'" (click)="activeTab = 'students'">📊 مديونيات الطلاب</button>
+    <button [class.active]="activeTab === 'finance'" (click)="activeTab = 'finance'">💰 ملخص الخزنة</button>
+    <button [class.active]="activeTab === 'employees'" (click)="activeTab = 'employees'">👨‍🏫 مسير الرواتب</button>
+    <button class="btn-print" (click)="printReport()">🖨️ طباعة الآن</button>
+  </nav>
+
+  <div class="report-content" id="print-area">
+    <div class="report-header">
+      <div class="school-info">
+        <h1>مدرسة  الأهلية النموذجية</h1>
+        <p>محافظة شبوة - عتق</p>
+      </div>
+      <div class="report-title">
+        <h2 *ngIf="activeTab === 'students'">تقرير مديونيات الطلاب المتبقية</h2>
+        <h2 *ngIf="activeTab === 'finance'">التقرير المالي العام للمؤسسة</h2>
+        <h2 *ngIf="activeTab === 'employees'">كشف استحقاق رواتب الكادر الوظيفي</h2>
+        <p>تاريخ الاستخراج: {{ today | date:'yyyy-MM-dd' }}</p>
+      </div>
+    </div>
+
+    <table *ngIf="activeTab === 'students'" class="data-table">
+      <thead>
+        <tr>
+          <th>اسم الطالب</th>
+          <th>الصف</th>
+          <th>إجمالي الرسوم</th>
+          <th>المسدد</th>
+          <th>المتبقي</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of debtStudents">
+          <td>{{ s.name }}</td>
+          <td>{{ s.level }} - {{ s.section }}</td>
+          <td>{{ (s.baseFees + s.busFees + s.uniformFees) | number }}</td>
+          <td>{{ (s.paidAmount + s.busPaid + s.uniformPaid) | number }}</td>
+          <td class="text-danger"><strong>{{ s.remainingAmount | number }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="activeTab === 'finance'" class="finance-summary">
+      <div class="summary-card">
+        <span>إجمالي المبالغ المحصلة</span>
+        <strong>{{ financeSummary.totalIncome | number }} RY</strong>
+      </div>
+      <div class="summary-card">
+        <span>إجمالي الديون الخارجية</span>
+        <strong>{{ financeSummary.totalDebt | number }} RY</strong>
+      </div>
+      <div class="summary-card">
+        <span>تكلفة الرواتب الشهرية</span>
+        <strong>{{ financeSummary.employeeCost | number }} RY</strong>
+      </div>
+    </div>
+
+    <table *ngIf="activeTab === 'employees'" class="data-table">
+      <thead>
+        <tr>
+          <th>اسم الموظف</th>
+          <th>الوظيفة</th>
+          <th>الراتب الأساسي</th>
+          <th>الحوافز</th>
+          <th>السحبيات</th>
+          <th>الصافي</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of employeeSalaries">
+          <td>{{ e.name }}</td>
+          <td>{{ e.jobTitle }}</td>
+          <td>{{ e.baseSalary | number }}</td>
+          <td>{{ e.totalBonuses | number }}</td>
+          <td>{{ e.totalWithdrawals | number }}</td>
+          <td><strong>{{ e.netSalary | number }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="report-footer">
+      <p>توقيع المدير المالي: ........................</p>
+      <p>ختم المدرسة</p>
+    </div>
+  </div>
+</div>
